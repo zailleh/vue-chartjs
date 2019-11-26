@@ -72,6 +72,28 @@ function dataHandler (newData, oldData) {
   }
 }
 
+function updateChartParams (oldParams, newParams) {
+  const chart = this.$data._chart;
+
+  if (chart && newParams.data.datasets && oldParams.data.datasets) {
+    const newDataString = JSON.stringify(newParams.options);
+    const oldDataString = JSON.stringify(oldParams.options);
+
+    if (newDataString !== oldDataString) {
+      Object.assign(chart.options, newParams.options);
+    }
+
+    dataHandler(newParams.data, oldParams.data);
+  } else {
+    if (chart) {
+      chart.destroy();
+      this.$emit('chart:destroy');
+    }
+    this.renderChart(newParams.data, newParams.options);
+    this.$emit('chart:render');
+  }
+}
+
 export const reactiveData = {
   data () {
     return {
@@ -97,7 +119,33 @@ export const reactiveProp = {
   }
 }
 
+export const reactiveChart = {
+  props: {
+    chartData: {
+      type: Object,
+      required: true,
+      default: () => {}
+    },
+    chartOptions: {
+      type: Object,
+      default: () => {}
+    },
+  },
+  computed: {
+    chartParams() {
+      return {
+        data: this.chartData,
+        options: Object.assign({}, this.options, this.chartOptions)
+      };
+    }
+  },
+  watch: {
+    chartParams: updateChartParams,
+  }
+}
+
 export default {
   reactiveData,
   reactiveProp
+  reactiveChart,
 }
