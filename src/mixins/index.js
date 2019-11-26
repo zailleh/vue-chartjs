@@ -76,10 +76,10 @@ function updateChartParams (oldParams, newParams) {
   const chart = this.$data._chart;
 
   if (chart && newParams.data.datasets && oldParams.data.datasets) {
-    const newDataString = JSON.stringify(newParams.options);
-    const oldDataString = JSON.stringify(oldParams.options);
+    const newOptionsString = JSON.stringify(newParams.options);
+    const oldOptionsString = JSON.stringify(oldParams.options);
 
-    if (newDataString !== oldDataString) {
+    if (newOptionsString !== oldOptionsString) {
       Object.assign(chart.options, newParams.options);
     }
 
